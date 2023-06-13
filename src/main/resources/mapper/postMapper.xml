@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yonghyeon.ntsproject.repository.PostRepository">
+
+    <select id="findAllCnt" resultType="long">
+        select count(*) from posts
+    </select>
+
+    <select id="findAll" resultType="com.yonghyeon.ntsproject.dto.PostResponse" parameterType="com.yonghyeon.ntsproject.dto.PostSearchRequest">
+        select id, title, content, author, DATE_FORMAT(reg_date, '%Y-%m-%d %H:%i:%s') as regDate
+        from posts
+        order by id
+        limit #{startLimit}, #{endLimit}
+    </select>
+
+    <select id="findById" resultType="com.yonghyeon.ntsproject.dto.PostResponse" parameterType="Long">
+        select id, title, content, author, DATE_FORMAT(reg_date, '%Y-%m-%d %H:%i:%s') as regDate from posts where id = #{id}
+    </select>
+
+    <select id="findByTitleCnt" resultType="long" parameterType="String">
+        select count(*) from posts where title like '%${title}%'
+    </select>
+
+    <select id="findByTitle" resultType="com.yonghyeon.ntsproject.dto.PostResponse" parameterType="com.yonghyeon.ntsproject.dto.PostSearchRequest">
+        select id, title, content, author, DATE_FORMAT(reg_date, '%Y-%m-%d %H:%i:%s') as regDate
+        from posts where title like '%${searchContent}%'
+        order by id
+        limit #{startLimit}, #{endLimit}
+    </select>
+
+    <select id="findByContentCnt" resultType="long" parameterType="String">
+        select count(*) from posts where content like '%${content}%'
+    </select>
+
+    <select id="findByContent" resultType="com.yonghyeon.ntsproject.dto.PostResponse" parameterType="com.yonghyeon.ntsproject.dto.PostSearchRequest">
+        select id, title, content, author, DATE_FORMAT(reg_date, '%Y-%m-%d %H:%i:%s') as regDate
+        from posts where content like '%${searchContent}%'
+        order by id
+        limit #{startLimit}, #{endLimit}
+    </select>
+
+    <select id="exist" resultType="boolean" parameterType="Long">
+        select if(count(id) = 1, TRUE, FALSE) from posts where id = #{id}
+    </select>
+    
+    <insert id="regist" parameterType="com.yonghyeon.ntsproject.dto.PostSaveRequest" >
+        insert into posts (title, content, author) values(#{title}, #{content}, #{author})
+    </insert>
+
+    <update id="modify" parameterType="com.yonghyeon.ntsproject.dto.PostUpdateRequest">
+        update posts set title = #{title}, content = #{content}, upt_date = NOW() where id = #{id}
+    </update>
+
+    <delete id="remove" parameterType="long">
+        delete from posts where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.12'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.yonghyeon'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.projectlombok:lombok:1.18.26'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.projectlombok:lombok:1.18.26'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.25'
+
+    implementation 'org.springframework.boot:spring-boot-starter-mustache'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

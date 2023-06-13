@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>스프링부트 웹서비스</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+
+<h1>게시글 수정</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="title">글 번호</label>
+                <input type="text" class="form-control" id="id" readonly>
+            </div>
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" class="form-control" id="title">
+            </div>
+            <div class="form-group">
+                <label for="author"> 작성자 </label>
+                <input type="text" class="form-control" id="author" readonly>
+            </div>
+            <div class="form-group">
+                <label for="content"> 내용 </label>
+                <textarea class="form-control" id="content"></textarea>
+            </div>
+        </form>
+        <a href="/" role="button" class="btn btn-secondary">취소</a>
+        <button type="button" class="btn btn-primary" id="btn-update">수정 완료</button>
+        <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+
+    $(document).ready(()=>{
+        getPost();
+    });
+
+    $('#btn-update').on('click', () => {
+        const titleLength = $('#title').val().length;
+        const contentLength = $('#content').val().length;
+
+        if(titleLength > 500 || contentLength > 500){
+            alert('제목/내용은 최대 500자 까지 입력 가능합니다.');
+        }else{
+            updatePost();
+        }
+    } );
+
+    $('#btn-delete').on('click', () => {
+        deletePost();
+    } );
+
+    function getPost(){
+
+        const splitUrl = window.location.toString().split('/');
+        const id = splitUrl[splitUrl.length-1];
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/posts/'+id,
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8'
+        }).done(function(result) {
+
+            $('input[id=id]').attr('value',result.id);
+            $('input[id=title]').attr('value',result.title);
+            $('input[id=author]').attr('value',result.author);
+            $('#content').text(result.content);
+
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
+
+    function updatePost(){
+        let data = {
+            id: $('#id').val(),
+            title: $('#title').val(),
+            content: $('#content').val()
+        };
+
+        let id = $('#id').val();
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/posts/'+id,
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('글이 수정되었습니다.');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
+
+    function deletePost(){
+        let id = $('#id').val();
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/posts/'+id,
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8'
+        }).done(function() {
+            alert('글이 삭제되었습니다.');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
+</script>
+</body>
+</html>

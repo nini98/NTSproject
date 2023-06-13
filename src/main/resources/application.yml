@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/nts?&serverTimezone=UTC&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8
+    username: root
+    password: root
+    mapper-locations: classpath:/mapper/**/*.xml
+
+logging:
+  level:
+    ROOT: INFO
+
+server:
+  servlet:
+    encoding:
+      force-response: true
+
+mybatis:
+  mapper-locations: mapper/*.xml
